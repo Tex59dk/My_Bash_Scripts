@@ -1,0 +1,64 @@
+#! /bin/bash
+
+help(){
+    yad --text="Fichier d'aide en cours d'écriture''."
+}
+export -f help
+
+verif(){
+    if ((nbrefichiers == 0)); then
+        yad --text="Aucun fichier '.ovpn' dans ce dossier !\nVeuillez en choisir un autre."
+    elif (("$utilisateur" eq "")); then
+        yad --text="Aucun nom d'utilisate' !\nVeuillez en indiquer un."
+    elif (("$motdepasse" eq "")); then
+        yad --text="Aucun mot de passe !\nVeuillez en indiquer un."
+    else
+
+    fi
+}
+export -f verif
+
+OUTPUT=$(yad --title="Importation .ovpn" \
+    --text="Utilisez ce formulaire pour importer\ndes fichiers .ovpn en masse" \
+    --image="/usr/share/icons/gnome/48x48/devices/network-vpn.png" \
+    --button=gtk-ok:"bash -c verif" \
+    --button=gtk-help:"bash -c help" \
+    --button=gtk-quit:0 \
+    --form --separator="," \
+    --field="Utilisateur :" \
+    --field="Mot de Passe :":H \
+    --field="Dossier :":MDIR
+) accepted=$?
+
+if ((accepted == 1)); then
+    utilisateur=$(echo $OUTPUT | awk 'BEGIN {FS="," } { print $1 }')
+    motdepasse=$(echo $OUTPUT | awk 'BEGIN {FS="," } { print $2 }')
+    chemin=$(echo $OUTPUT | awk 'BEGIN {FS="," } { print $3 }')
+    echo "Utilisateur = $utilisateur"
+    echo "Mot de Passe = $motdepasse"
+    echo "Chemin .ovpn = $chemin"
+
+    nbrefichiers=$(find $chemin -maxdepth 1 -type f -name "*.ovpn" | wc -l)
+
+    if ((nbrefichiers != 0)); then
+        #read -p 'Username: ' username
+        #read -p 'Password: ' password
+        chemin="$chemin/*.ovpn"
+        for path in $chemin
+        do
+            name=$(basename "$path" ".ovpn")
+
+            echo "$name => $path"
+            #read -p "Press 'Enter' to continue..." pause
+
+            #sudo nmcli --terse connection delete id "$name" > /dev/null
+            #sudo nmcli --terse connection import type openvpn file "$path" > /dev/null
+            #sudo nmcli connection modify "$name" vpn.persistent true
+            #sudo nmcli connection modify "$name" vpn.user-name "$utilisateur"
+            #sudo nmcli connection modify "$name" +vpn.data "password-flags = 0, username = $utilisateur"
+            #sudo nmcli connection modify "$name" +vpn.secrets "password=$motdepasse"
+        done
+    else
+
+    fi
+fi

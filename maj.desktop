@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Updating the System
+Name[fr]=Mise à Jour du Système
+Comment=Do a full update of the system
+Comment[fr]=Permet de mettre à jour complète du système
+GenericName=System Update
+GenericName[fr]=Mise à Jour Système
+Exec=/usr/bin/maj
+Icon=system-software-update
+Categories=System;Utility;Core;GTK;
+Terminal=true
+StartupNotify=true

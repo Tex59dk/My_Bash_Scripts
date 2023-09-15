@@ -1,0 +1,46 @@
+#! /bin/bash
+
+#~ Run dialog
+#~ Run dialog with history, URI recognition and run-in-xterm functions
+#~ Additional software:
+#~  - xterm or terminator
+#~  - perl
+
+# XTERM="xterm"
+XTERM="terminator"
+
+# create history file
+mkdir -p ${XDG_CACHE_HOME:-$HOME/.cache}/
+HISTFILE=${XDG_CACHE_HOME:-$HOME/.cache}/ix-run.history
+touch $HISTFILE
+
+# create and run dialog
+TITLE="Run command"
+TEXT="\nEntrez la commande à exécuter :\n"
+rcmd=$(yad --width=500 --center --window-icon="gtk-execute" --name="${0##*/}" --title="$TITLE" --text="$TEXT" --image="gtk-execute" --entry --editable --rest="$HISTFILE")
+
+[[ -z "$rcmd" ]] && exit 0
+
+# run command
+case $rcmd in
+    http://*|https://*|ftp://*)
+    xdg-open $rcmd &
+    ;;
+    mailto://*)
+    xdg-email $rcmd &
+    ;;
+    man://*)
+    eval $XTERM -e "man ${rcmd#man://}" &
+    ;;
+    telnet*|ssh*)
+    eval $XTERM -e "$rcmd" &
+    ;;
+    *)
+    eval $rcmd &
+    ;;
+esac
+
+# add command to history
+grep -q -F "$rcmd" $HISTFILE || sed -i "1 i $rcmd" $HISTFILE
+
+exit 0

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+clear
+echo "->"
+echo " _____  _  _        _   _       _"
+echo "| ____|| || | __ _ | \\ | | ___ | |_"
+echo "|  _|  | || |/ _\` ||  \\| |/ _ \\| __|"
+echo "| |___ | || | (_| || |\\  |  __/| |_"
+echo "|_____||_||_|\\__,_||_| \\_|\\___| \\__|"
+echo ""
+echo -e "\nPrésente :\n"
+echo -e "Le script qui permet de supprimer les fichiers Mac inutiles.\n"
+echo -e "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+echo ""
+
+if [ "$(id -u)" -ne "0" ] ; then
+    echo "Ce script doit être exécuté avec les privilèges Root."
+    echo "Arrêt du script."
+    exit 1
+fi
+
+echo "Attention ! Opération irréversible !"
+if [ ! "$1" = "-y" ]; then
+   read -n 1 -p "Êtes-vous sûr de vouloir continuer (O/N) ? " suite
+   echo ""
+else
+   suite="O"
+fi
+suite=${suite^}
+if [ "$suite" = "O" ]; then
+   echo "Début des opérations."
+   rm -rvf "__MACOSX"
+   rm -rvf ".DS_Store"
+   echo "Opération effectuée"
+   exit 0
+fi
+echo "Opérations annulées."
+exit 2

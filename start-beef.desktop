@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Start BeEF and MetasPloit
+Name[fr]=Lance BeEF et MetasPloit
+Comment=Start BeEF and MetasPloit with parameters
+Comment[fr]=Lance BeEF et MetasPloit avec paramètres
+GenericName=Start BeEF/MetasPloit
+GenericName[fr]=Lance BeEF/MetasPloit
+Exec=sudo /usr/bin/start-beef
+Icon=system-software-update
+Categories=System;Utility;Core;GTK;
+Terminal=true
+StartupNotify=true

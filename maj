@@ -1,0 +1,54 @@
+#!/bin/bash
+
+clear
+echo " _____  _  _        _   _       _"
+echo "| ____|| || | __ _ | \\ | | ___ | |_"
+echo "|  _|  | || |/ _\` ||  \\| |/ _ \\| __|"
+echo "| |___ | || | (_| || |\\  |  __/| |_"
+echo "|_____||_||_|\\__,_||_| \\_|\\___| \\__|"
+echo ""
+echo -e "\nPrésente :\n"
+echo -e "Le script qui permet de mettre à jour le système."
+echo -e "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+echo ""
+
+userco=$USER
+usercom=${userco^}
+
+echo -e "\nBonjour $usercom,"
+
+question () {
+   choix="a"
+   while [ "$choix" != "O" ] && [ "$choix" != "N" ]
+   do
+      printf "\nSouhaitez-vous continuer ? (O/N) : "
+      read -n 1 choix
+      choix=${choix^}
+      #echo -e "\n\nChoix : $choix\n\n"
+   done
+   echo -e "\n\n"
+}
+
+if [ "$1" = "-y" ]; then
+   choix="O"
+else
+   question
+fi
+
+if [ "$choix" = "N" ]; then
+   echo -e "Arrêt du script.\n"
+   exit 0
+fi
+
+sucmd=""
+if [ "$(id -u)" -ne "0" ] ; then
+    echo -e "Attention !\nIl se peut que rien n'apparaisse à l'écran quand un mot de passe est saisi...\n"
+    sucmd="sudo"
+fi
+
+$sucmd apt update
+$sucmd apt full-upgrade -y
+$sucmd apt autoremove -y
+$sucmd apt upgrade -y
+
+echo -e "\n\nOpération terminée. Le système est à jour."
